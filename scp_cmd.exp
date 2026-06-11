@@ -1,0 +1,24 @@
+#!/usr/bin/expect -f
+
+set timeout -1
+set ip "192.168.1.56"
+set user "biswa"
+set password "biswa"
+set src [lindex $argv 0]
+set dst [lindex $argv 1]
+
+spawn scp -o StrictHostKeyChecking=no -r $src $user@$ip:$dst
+
+expect {
+    "assword:" {
+        send "$password\r"
+        exp_continue
+    }
+    timeout {
+        puts "Connection timeout"
+        exit 1
+    }
+    eof {
+        # done
+    }
+}

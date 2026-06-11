@@ -1,0 +1,18 @@
+Mo Ambulance – FY 2023-24 Detailed Revenue by Business Line and State
+
+This section provides a state-wise, business-line breakdown of all revenue for FY 2023-24.
+
+In FY 2023-24, RIDE (B2C) in Odisha generated revenue of Rs 2,700,000. (units/count: 1)
+In FY 2023-24, HAMS (B2B) in Odisha generated revenue of Rs 27,000,000. (units/count: 2)
+In FY 2023-24, HAMS (B2B) in Odisha generated revenue of Rs 450,000. (units/count: 50)
+In FY 2023-24, HAMS (B2B) in West Bengal generated revenue of Rs 500,000.
+In FY 2023-24, HAMS (B2B) in Jharkhand generated revenue of Rs 500,000.
+In FY 2023-24, MHU in Odisha generated revenue of Rs 360,000. (units/count: 3)
+In FY 2023-24, INDUSTRY (B2B) in Odisha generated revenue of Rs 600,000. (units/count: 4)
+In FY 2023-24, AMTeK & AMTeK-V in Odisha generated revenue of Rs 7,000,000. (units/count: 5)
+In FY 2023-24, AMTeK & AMTeK-V in Bihar generated revenue of Rs 70,000.
+In FY 2023-24, AMTeK & AMTeK-V in Chhattisgarh generated revenue of Rs 70,000.
+In FY 2023-24, AMTeK & AMTeK-V in Jharkhand generated revenue of Rs 70,000.
+In FY 2023-24, IOT(B2B): ATOMS in Odisha (100junction/City) generated revenue of Rs 1,720,000. (units/count: 6)
+In FY 2023-24, PRE PAID KISOK @900 PER MONTH PER KIOSK in Orissa generated revenue of Rs 1,200. (units/count: 7)
+In FY 2023-24, WHITE LABELLING (B2B) in Odisha generated revenue of Rs 400,000. (units/count: 8)

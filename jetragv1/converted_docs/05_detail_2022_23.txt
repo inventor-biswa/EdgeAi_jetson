@@ -1,0 +1,9 @@
+Mo Ambulance – FY 2022-23 Detailed Revenue by Business Line and State
+
+This section provides a state-wise, business-line breakdown of all revenue for FY 2022-23.
+
+In FY 2022-23, RIDE (B2C) in Odisha generated revenue of Rs 9,449,000. (units/count: 1)
+In FY 2022-23, HAMS(B2B) in Odisha generated revenue of Rs 76,000. (units/count: 2)
+In FY 2022-23, MHU (B2B2C) in Odisha generated revenue of Rs 39,000. (units/count: 1)
+In FY 2022-23, IOT (B2B) in Bihar generated revenue of Rs 1,290,000. (units/count: 11)
+Total revenue from IOT (B2B) in FY 2022-23: Rs 10,854,000.

@@ -1,0 +1,28 @@
+# Mo Ambulance – Assumptions & Definitions
+
+Mo Ambulance
+A | DEFINITION OF REVENUE SOURCE | DESCRIPTIONS
+1 | B2B | Hospital, Industry, Corporates
+2 | HAMS | Hospital Ambulance Management System
+3 | MHU | Mobile Health Unit
+4 | AMTeK & AMTeK-V | Oxygen Sylinder Sensor, Breath Analyser, GPS, web Camera, E-log Book, Dashboard & Vital Parameter device (ECG, Oxygen Saturation, PR, Temp, RR, BP)
+6 | ATOMS | Ambulance Traffic Organisation & Management System for Urban and Smart City
+6 | KIOSK (PRE PAID) | Pre Paid KISOK for Ambulance Management at Multispeciality Hospital
+7 | INDUSTRY | Colloboration Approach in Industry and Corporate for  Ambulance 24X7 Support Service
+8 | WHITE LABELLING (B2B) | Labelling of all app (B2C/DRIVER/HAMS) IN HOSPITAL NAME
+B | ASSUMPTIONS & CLARIFICATIONS | DESCRIPTIONS
+1 | PRE PAID KISOK AMBULANCE MODEL | Mo Ambulance has started the discussion with Odisha Govt. to introduce this Model in Major Hospital with >500 bedded (Medical College & Hospital)
+2 | HAMS (Hospital Ambulance Management System | Mo Ambulance has Started the Implementation of Ambulance Support through Integration of tech Application with different Customize Model for Hospital
+3 | AMBULANCE OXYGEN SENSOR (B2B) | Mo Ambulance has planned to integrate in all Ambulance of Govt to Monitor the Oxygen Level
+4 | Govt. Level Policy Level | Mo Ambulance will have proposal to work with Govt. at the Policy Level implementation on Quality Assurance of the Private ambulance
+5 | Smart City Implementation (ATOMS) | Mo Ambulance has planned to introduce the smart city Ambulance Surveillance Model in Bhubaneswar Smart City to avoid the Crowd
+6 | IOT | Mo Ambulance is in process to scale up the Bihar Project to State wise
+7 | 5G Mo Ambulance | Reformation of Existing Ambulance to 5G Ambulance with Low Cost
+8 | Policy Level Implementation of Factory Act 1948 | To implement the inhouse Ambulance as per Factory Act 1948
+9 | INDUSTRY | Mo Ambulance has submitted the Proposal to TATA, JSW, PPL for Smart Ambulance Management Project
+10 | WHITE LABELLING (B2B) | Mo Ambulance is in Process of Developing the White Labelling Application for Chain of Hospital as Emergency Medical Service App. which includes the Patient App, Ambulance Driver app, and Hospital App.
+11 | Insurance Support through B2C App. | Mo Ambulance is in discussion with Insurance Company to support insurance for the Ambulance Ride Cost and also approval of Patient Treatment Cost before arrival at the hospital
+12 | Mobile Health Unit (MHU) | MHU support to the Onboarded Hospital for Patient footfall support and revenue generation of both
+13 | IOT-Ambulance (Intrapartum Monitoring) | Mo Ambulance will pilot the Project on 102/Janani Express Ambulance for Pregnant women Transportation to the Hospital
+14 | Implementation of Universal HAMS | HAMS will be Used by each hospital for Proper Monitoring of the In & out of Ambulance without any delay
+15 | Rental Ambulance | As we have the aggregator of Ambulance , we are getting Proposal for Rental Ambulance
