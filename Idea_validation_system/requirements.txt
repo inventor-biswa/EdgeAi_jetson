@@ -1,0 +1,18 @@
+# ─── Jetson Offline Edition — Python Dependencies ────────────────────────────
+#
+# Removed cloud-only packages:
+#   google-generativeai  → replaced by requests (OpenAI-compat to llama-server)
+#   pymongo[srv]         → replaced by sqlite3 (Python built-in, no install)
+#   tavily-python        → replaced by offline fallback in websearch.py
+#
+# All packages below install cleanly on Jetson (ARM64 / aarch64).
+
+requests              # HTTP client for llama-server API (same as used in jetragv1)
+python-dotenv         # .env file loading
+streamlit             # Web UI (kept as fallback — run: streamlit run app.py)
+python-pptx           # PowerPoint generation
+
+# ─── FastAPI Stack (new — replaces Streamlit as primary UI backend) ───────────
+fastapi               # REST API framework
+uvicorn[standard]     # ASGI server for FastAPI
+python-multipart      # Required for FastAPI file/form handling

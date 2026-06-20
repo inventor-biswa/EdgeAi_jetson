@@ -1,7 +1,7 @@
 #!/usr/bin/expect -f
 
 set timeout -1
-set ip "192.168.1.32"
+set ip "192.168.1.56"
 set user "biswa"
 set password "biswa"
 set src [lindex $argv 0]

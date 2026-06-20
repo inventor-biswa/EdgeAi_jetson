@@ -1,0 +1,26 @@
+# Virtual Environment
+.venv/
+
+# Environment Variables
+.env
+.env.local
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Generated Output Files
+outputs/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# VS Code Dev Container
+.devcontainer/
+
+# Files for Testing
+testing.py
+
+# Templates
+ppt_templates/
