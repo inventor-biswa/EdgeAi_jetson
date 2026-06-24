@@ -13,6 +13,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import json
+import requests
 from io import BytesIO
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -32,13 +33,18 @@ from report import save_json, save_markdown
 from database import save_analysis
 from websearch import get_search_context
 from ppt import generate_ppt
+from analyzer import LLM_API_URL
+
+# Base URL of the llama-server itself (e.g. http://127.0.0.1:8080), derived
+# from the chat-completions endpoint so /health can ping the LLM directly.
+LLM_BASE_URL = LLM_API_URL.split("/v1/")[0]
 
 
 # ─── App Setup ────────────────────────────────────────────────────────────────
 
 app = FastAPI(
     title="ThynxAI Idea Lab API",
-    description="AI-Powered Startup Idea Validator — Jetson Offline Edition",
+    description="AI-Powered Startup Idea Validator — Offline Edition",
     version="2.0.0",
 )
 
@@ -96,7 +102,15 @@ async def root():
 
 @app.get("/health")
 async def health():
-    return {"status": "ok"}
+    """Backend is always 'ok' if this responds; llm reflects whether the
+    model server is actually reachable (e.g. still warming up after a
+    restart, which takes ~90s)."""
+    try:
+        r = requests.get(f"{LLM_BASE_URL}/health", timeout=2)
+        llm_status = "ready" if r.ok else "warming_up"
+    except requests.exceptions.RequestException:
+        llm_status = "warming_up"
+    return {"status": "ok", "llm": llm_status}
 
 
 # ── Step 1: Validate idea ─────────────────────────────────────────────────────
@@ -343,7 +357,7 @@ class ChatRequest(BaseModel):
 
 @app.post("/api/chat")
 async def api_chat(req: ChatRequest):
-    """General-purpose chatbot backed by the offline Qwen model."""
+    """General-purpose chatbot backed by the offline AI model."""
     try:
         from analyzer import call_gemini, _parse_json_robust
         history_text = ""
@@ -351,7 +365,7 @@ async def api_chat(req: ChatRequest):
             role = "User" if msg.get("role") == "user" else "Assistant"
             history_text += f"{role}: {msg.get('content', '')}\n"
 
-        prompt = f"""You are ThynxAI, a helpful AI assistant running offline on an NVIDIA Jetson.
+        prompt = f"""You are ThynxAI, a helpful AI assistant running fully offline.
 You help startup founders. Be concise (under 150 words), friendly, and practical.
 
 Previous conversation:

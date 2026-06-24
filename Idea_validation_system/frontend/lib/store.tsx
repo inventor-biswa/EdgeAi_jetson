@@ -9,7 +9,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { AnalysisResult } from "./api";
+import { AnalysisResult, ReadinessTips } from "./api";
 
 // ─── State Shape ──────────────────────────────────────────────────────────────
 export interface AppState {
@@ -25,6 +25,8 @@ export interface AppState {
   analysis: AnalysisResult | null;
   searchContext: Record<string, any> | null;
   subPage: "mvp_help" | "investment_help" | null;
+  mvpTips: ReadinessTips | null;
+  investmentTips: ReadinessTips | null;
 }
 
 const INITIAL_STATE: AppState = {
@@ -40,6 +42,8 @@ const INITIAL_STATE: AppState = {
   analysis: null,
   searchContext: null,
   subPage: null,
+  mvpTips: null,
+  investmentTips: null,
 };
 
 // ─── Actions ──────────────────────────────────────────────────────────────────
@@ -53,6 +57,8 @@ type Action =
   | { type: "SAVE_QUESTION_ANSWER"; question: string; answer: string }
   | { type: "SET_ANALYSIS"; payload: AnalysisResult }
   | { type: "SET_SUB_PAGE"; payload: "mvp_help" | "investment_help" | null }
+  | { type: "SET_MVP_TIPS"; payload: ReadinessTips }
+  | { type: "SET_INVESTMENT_TIPS"; payload: ReadinessTips }
   | { type: "LOAD_SAVED_ANALYSIS"; payload: AnalysisResult }
   | { type: "RESET" }
   | { type: "START_NEW_IDEA"; payload: string };
@@ -117,8 +123,12 @@ function reducer(state: AppState, action: Action): AppState {
       return { ...state, analysis: action.payload };
     case "SET_SUB_PAGE":
       return { ...state, subPage: action.payload };
+    case "SET_MVP_TIPS":
+      return { ...state, mvpTips: action.payload };
+    case "SET_INVESTMENT_TIPS":
+      return { ...state, investmentTips: action.payload };
     case "LOAD_SAVED_ANALYSIS":
-      // Load a historical analysis for viewing on results page
+      // Load a historical analysis — clear cached tips since they belong to the previous session
       return { ...INITIAL_STATE, step: 4, analysis: action.payload, idea: action.payload.original_idea || action.payload.idea_summary || "" };
     case "RESET":
       return { ...INITIAL_STATE };

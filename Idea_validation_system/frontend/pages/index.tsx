@@ -8,10 +8,12 @@ import LoadingOverlay from "@/components/LoadingOverlay";
 import ThynxLogo from "@/components/ThynxLogo";
 import { useStore } from "@/lib/store";
 import { validateIdea, getAnalyses, getAnalysis, deleteAnalysis, AnalysisSummary } from "@/lib/api";
+import { useAIStatus } from "@/lib/useAIStatus";
 
 export default function Home() {
   const router = useRouter();
   const { state, dispatch } = useStore();
+  const aiStatus = useAIStatus();
   const [idea, setIdea] = useState(state.idea || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -44,7 +46,10 @@ export default function Home() {
       dispatch({ type: "START_NEW_IDEA", payload: idea.trim() });
       router.push("/profile");
     } catch (e: any) {
-      setError(e?.response?.data?.detail || "Could not reach the AI server. Is the backend running?");
+      const fallback = aiStatus === "warming_up" || aiStatus === "checking"
+        ? "⏳ The AI model is still warming up after a restart — this usually takes under 2 minutes. Please try again shortly."
+        : "Could not reach the AI server. Is the backend running?";
+      setError(e?.response?.data?.detail || fallback);
       setLoading(false);
     }
   };
@@ -86,7 +91,7 @@ export default function Home() {
     <>
       <Head>
         <title>ThynxAI Idea Lab — AI-Powered Startup Validator</title>
-        <meta name="description" content="Validate your startup idea with AI. Get a full 8-dimension analysis, market insights, and pitch deck — all running offline on NVIDIA Jetson." />
+        <meta name="description" content="Validate your startup idea with AI. Get a full 8-dimension analysis, market insights, and pitch deck — all running fully offline and privately on your own device." />
       </Head>
 
       <AnimatePresence>{loading && <LoadingOverlay message="Validating your idea…" />}</AnimatePresence>
@@ -105,7 +110,7 @@ export default function Home() {
           </div>
           <h1 className="hero__title">Idea Lab</h1>
           <p className="hero__sub">
-            AI-powered startup idea validator — running fully offline on NVIDIA Jetson Orin Nano.
+            AI-powered startup idea validator — running fully offline, with complete data privacy.
           </p>
         </motion.div>
 

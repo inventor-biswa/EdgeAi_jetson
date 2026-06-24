@@ -2,7 +2,7 @@
 
 An AI-powered system that analyzes startup ideas and generates detailed evaluation reports, pitch decks, and roadmaps.
 
-**v2.0 Update:** The application has been completely redesigned to run **100% offline and locally on an NVIDIA Jetson Orin Nano**. No cloud API keys, no external database connections, and completely private.
+**v2.0 Update:** The application has been completely redesigned to run **100% offline and locally on private edge hardware**. No cloud API keys, no external database connections, and completely private.
 
 ---
 
@@ -11,7 +11,7 @@ An AI-powered system that analyzes startup ideas and generates detailed evaluati
 1. Takes a startup idea as input.
 2. Collects detailed founder information through a conversational chat interface.
 3. Generates intelligent adaptive follow-up questions based on the idea and founder profile.
-4. Analyzes the idea across 8 structured dimensions using a local Qwen 2.5 7B LLM.
+4. Analyzes the idea across 8 structured dimensions using a local LLM.
 5. Generates a detailed evaluation report (JSON + Markdown).
 6. **[NEW]** Instantly generates a structured PowerPoint Pitch Deck (`.pptx`).
 7. **[NEW]** Provides an offline floating chat mentor widget to answer follow-up questions about your specific business idea.
@@ -37,12 +37,12 @@ Idea_validation_system/
 
 ## ⚙️ Architecture & Tech Stack
 
-This project is built explicitly for edge hardware (NVIDIA Jetson) focusing on privacy and local inference:
+This project is built explicitly for private edge hardware, focusing on privacy and local inference:
 
 - **Frontend:** Next.js, React, Vanilla CSS, Framer Motion (Glassmorphic UI)
 - **Backend:** FastAPI, Python, SQLite3
 - **AI Engine:** `llama.cpp` Server (Dockerized, using NVIDIA runtime)
-- **LLM Model:** `Qwen2.5-7B-Instruct-Q4_K_M.gguf`
+- **LLM Model:** local quantized instruct model (`.gguf`)
 - **Deployment:** `systemd` autostart manager
 
 ---
@@ -88,4 +88,4 @@ After running an idea through the system, you can instantly download:
 - **Markdown Report:** A clean, human-readable text document.
 - **Pitch Deck (.pptx):** A fully structured 6-slide PowerPoint presentation generated natively without external templates.
 
-*Built entirely for offline edge computing on the NVIDIA Jetson Orin Nano.*
+*Built entirely for offline edge computing on private, on-device hardware.*

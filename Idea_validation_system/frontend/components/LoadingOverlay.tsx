@@ -44,13 +44,13 @@ export default function LoadingOverlay({
           {message}
         </div>
         <div className="loading-text loading-dots" style={{ color: "var(--text-secondary)" }}>
-          This may take a minute on the Jetson
+          This may take a minute
         </div>
       </div>
 
       {/* Thynx logo watermark */}
       <div style={{ position: "absolute", bottom: "2rem", opacity: 0.3, fontSize: "0.75rem", letterSpacing: "0.15em", color: "var(--text-muted)", textTransform: "uppercase" }}>
-        ThynxAI · Powered by Qwen 2.5
+        ThynxAI · Private On-Device AI
       </div>
     </motion.div>
   );

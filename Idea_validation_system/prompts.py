@@ -103,14 +103,32 @@ FOLLOW-UP Q&A:
 MARKET DATA:
 {market_snippet if market_snippet else "Use your training knowledge for market data."}
 
+STRICTNESS RULES — read before scoring:
+- IMPORTANT: "proposed_solution" below always describes the founder's PLAN — what the product would do once built. Describing a plan is NOT evidence that it has been built. Never treat the existence of a detailed plan, feature list, or step-by-step flow as proof of a working MVP.
+- "mvp_evidence" must be a direct quote taken ONLY from the FOLLOW-UP Q&A ANSWERS printed above — NOT from the FOUNDER background or skills section. Re-read each Q&A answer one by one and look for the founder saying any of these things in their own words: "I already have", "I built", "I have X paying customers", "working prototype", "I tested it with real users", "people are using it", "I launched". If you find such a phrase in a Q&A answer, copy it exactly as your mvp_evidence. The FOUNDER background/skills section (before the Q&A) does NOT count — prior work history is not evidence of this specific product being built. If no Q&A answer contains such a phrase — set "mvp_evidence" to the exact literal string "NONE".
+- "is_mvp_ready" = "Yes" ONLY if "mvp_evidence" above is not "NONE". If "mvp_evidence" is "NONE", "is_mvp_ready" MUST be "No — no working prototype or user testing was described, only a plan for what will be built later".
+- "is_investment_ready" and "is_incubator_ready" must be tied to the 6 dimension scores below: if the average of the 6 scores is below 6/10, OR execution_risk or revenue_potential is weak, the answer must be "No — <name the specific weak dimension>".
+- Never default to an optimistic "Yes" to be encouraging. Founders are non-technical and are relying on this report to know where they really stand — an inflated verdict actively harms them. Honesty first, encouragement second.
+- Every reasoning field must reference something specific from the founder's actual input or the market data — not a generic statement that could apply to any idea.
+
+SCORING RUBRIC — calibrate each score honestly before writing it:
+- 1-2: Critically flawed. No evidence at all, or strong evidence the idea will fail in this dimension.
+- 3-4: Weak. Significant gaps with no plan to address them; below what investors or users would accept.
+- 5: Average. Meets minimum bar but nothing stands out; many early-stage ideas land here.
+- 6-7: Moderate to good. Real evidence of strength, but at least one clear gap still needs work.
+- 8-9: Strong. Concrete, specific evidence of advantage; only minor gaps remain.
+- 10: Exceptional. Reserved for ideas with proven traction, unique moat, or rare founder advantage.
+IMPORTANT: most early-stage ideas with no product built yet score 3-5 across most dimensions. Scores of 7+ require specific, concrete evidence from the founder's input — not potential. If you find yourself writing 6 or 7 for every dimension, stop and re-evaluate each one individually against this rubric.
+For execution_risk specifically: a founder with limited available time (weekends only, part-time), no technical skills in a tech-dependent idea, no co-founder, and no developer lined up must score 2-4. execution_risk of 5+ requires the founder to have at least one of: relevant technical skill, full-time availability, or an existing team member.
+
 Output ONLY this exact JSON structure. Replace ALL placeholder text with real analysis. No null values allowed:
 {{
   "founder_name": "{founder_name}",
   "idea_summary": "one sentence describing what this product does",
   "problem_statement": {{
-    "description": "2 sentences describing the problem clearly",
+    "description": "3-4 sentences describing the problem clearly and concretely, in plain language",
     "target_audience": "who specifically faces this problem",
-    "why_current_solutions_fail": "why existing solutions are not enough",
+    "why_current_solutions_fail": "2-3 sentences on why existing solutions are not enough",
     "real_world_example": "short story of a real person with this problem",
     "pain_points": ["specific pain 1", "specific pain 2", "specific pain 3"],
     "who_suffers_most": "the most affected group",
@@ -119,7 +137,7 @@ Output ONLY this exact JSON structure. Replace ALL placeholder text with real an
     "how_long_problem_exists": "how long this problem has existed"
   }},
   "proposed_solution": {{
-    "simple_explanation": "explain to a 10 year old in 2 sentences",
+    "simple_explanation": "explain to a 10 year old in 3-4 sentences",
     "step_by_step_how_it_works": ["user does step 1", "step 2 happens", "step 3 result"],
     "key_features": ["feature 1 description", "feature 2 description", "feature 3 description"],
     "unfair_advantage": "unique edge this specific founder has",
@@ -135,12 +153,12 @@ Output ONLY this exact JSON structure. Replace ALL placeholder text with real an
     "market_gap": "specific gap this idea fills"
   }},
   "scores": {{
-    "market_feasibility": {{"score": "7", "reasoning": "one sentence reason. Next step: one specific action."}},
-    "marketing_potential": {{"score": "6", "reasoning": "one sentence reason. Next step: one specific action."}},
-    "scalability": {{"score": "7", "reasoning": "one sentence reason. Next step: one specific action."}},
-    "revenue_potential": {{"score": "6", "reasoning": "one sentence reason. Next step: one specific action."}},
-    "technical_complexity": {{"score": "6", "reasoning": "one sentence reason. Next step: one specific action."}},
-    "execution_risk": {{"score": "6", "reasoning": "one sentence reason. Next step: one specific action."}}
+    "market_feasibility": {{"score": "<your honest 1-10 integer>", "reasoning": "EXACTLY 3-4 sentences: (1) cite specific evidence from the idea or Q&A that set this score, (2) explain what that evidence means for market success in plain language, (3) name the biggest gap or risk in this dimension for this idea, (4) one concrete next action to improve this score."}},
+    "marketing_potential": {{"score": "<your honest 1-10 integer>", "reasoning": "EXACTLY 3-4 sentences: (1) cite specific evidence from the idea or Q&A that set this score, (2) explain what that evidence means for reaching customers in plain language, (3) name the biggest gap or risk in this dimension for this idea, (4) one concrete next action to improve this score."}},
+    "scalability": {{"score": "<your honest 1-10 integer>", "reasoning": "EXACTLY 3-4 sentences: (1) cite specific evidence from the idea or Q&A that set this score, (2) explain what that evidence means for growth in plain language, (3) name the biggest gap or risk in this dimension for this idea, (4) one concrete next action to improve this score."}},
+    "revenue_potential": {{"score": "<your honest 1-10 integer>", "reasoning": "EXACTLY 3-4 sentences: (1) cite specific evidence from the idea or Q&A that set this score, (2) explain what that evidence means for making money in plain language, (3) name the biggest gap or risk in this dimension for this idea, (4) one concrete next action to improve this score."}},
+    "technical_complexity": {{"score": "<your honest 1-10 integer>", "reasoning": "EXACTLY 3-4 sentences: (1) cite specific evidence from the idea or Q&A and the founder's skills that set this score, (2) explain what that evidence means for building the product in plain language, (3) name the biggest technical gap or risk for this idea, (4) one concrete next action to improve this score."}},
+    "execution_risk": {{"score": "<your honest 1-10 integer>", "reasoning": "EXACTLY 3-4 sentences: (1) cite specific evidence from the founder profile (especially available time and skills) and Q&A that set this score, (2) explain what that means for shipping in plain language, (3) name the biggest execution gap or risk, (4) one concrete next action to reduce this risk."}}
   }},
   "support_required": {{
     "team_needed": "what team roles are needed",
@@ -155,12 +173,22 @@ Output ONLY this exact JSON structure. Replace ALL placeholder text with real an
     "cloud": "cloud or local hosting recommendation",
     "ai_tools": "AI tools if needed or none"
   }},
+  "failure_analysis": {{
+    "why_similar_ideas_failed": "2-3 sentences naming REAL companies or well-known attempts in this space that failed, and the specific reason each one failed — not generic market conditions, but the actual cause (e.g. wrong unit economics, regulatory block, wrong customer segment, couldn't retain users). Use real names if you know them.",
+    "top_3_kill_risks": [
+      "Kill risk 1: the single most likely thing to kill THIS specific idea, with one sentence explaining why it is dangerous for this founder",
+      "Kill risk 2: second most dangerous threat specific to this idea and founder's situation",
+      "Kill risk 3: third risk this founder must prepare for before launch"
+    ],
+    "hardest_obstacle_first_90_days": "2-3 sentences describing the ONE hardest obstacle this specific founder will hit in the first 90 days — referencing their background, skills, and available time — and one concrete suggestion for how to get past it"
+  }},
   "overall": {{
-    "score": "7",
-    "is_mvp_ready": "Yes or No with brief explanation",
-    "is_investment_ready": "Yes or No with brief explanation",
-    "is_incubator_ready": "Yes or No with brief explanation",
-    "final_verdict": "2 honest motivating sentences about what to do next"
+    "score": "<your honest 1-10 integer — average of the 6 scores above>",
+    "mvp_evidence": "exact quote from IDEA or FOLLOW-UP Q&A proving something is already built/tested, or the literal string NONE",
+    "is_mvp_ready": "Yes or No — must follow the STRICTNESS RULES above, name specific missing evidence if No",
+    "is_investment_ready": "Yes or No — must follow the STRICTNESS RULES above, name the specific weak dimension if No",
+    "is_incubator_ready": "Yes or No — must follow the STRICTNESS RULES above, name the specific weak dimension if No",
+    "final_verdict": "4-6 honest sentences plainly stating what is missing and what to do next — encouraging in tone but never inflating the reality"
   }}
 }}"""
 
@@ -302,8 +330,8 @@ Start with one locality, 10 store owners, WhatsApp only."
 
 Respond ONLY in this exact JSON format:
 {
-  "what_it_means": "explain what MVP means for THIS specific idea with real example — 2 simple lines",
-  "why_not_ready": ["specific reason 1 from real market data", "specific reason 2", "specific reason 3"],
+  "what_it_means": "explain what MVP means for THIS specific idea with a real example — 4-5 plain-language sentences, concrete and specific, not generic",
+  "why_not_ready": ["specific reason 1 from real market data, 2-3 sentences with concrete evidence", "specific reason 2, 2-3 sentences", "specific reason 3, 2-3 sentences"],
   "steps_to_become_ready": ["very specific step 1", "very specific step 2", "very specific step 3 — add up to 5 if needed"],
   "realistic_timeline": "honest timeline based on founder available time — e.g. 4-6 weeks working part time",
   "first_action": "one ultra-specific thing they can do tomorrow morning — no vague advice"
@@ -358,8 +386,8 @@ and investor connections for ideas at exactly your stage."
 
 Respond ONLY in this exact JSON format:
 {
-  "what_it_means": "explain investment readiness for THIS idea with real market context — 2 simple lines",
-  "why_not_ready": ["specific reason 1 with real data", "specific reason 2", "specific reason 3"],
+  "what_it_means": "explain investment readiness for THIS idea with real market context — 4-5 plain-language sentences, concrete and specific, not generic",
+  "why_not_ready": ["specific reason 1 with real data, 2-3 sentences with concrete evidence", "specific reason 2, 2-3 sentences", "specific reason 3, 2-3 sentences"],
   "steps_to_become_ready": ["ultra specific step 1", "ultra specific step 2", "ultra specific step 3 — add up to 5 if needed"],
   "what_investors_look_for": ["specific metric or signal 1 for THIS industry", "specific thing 2", "specific thing 3", "specific thing 4"],
   "realistic_timeline": "honest timeline based on founder available time and current readiness",

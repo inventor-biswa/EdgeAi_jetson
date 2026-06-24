@@ -5,6 +5,7 @@ import ThynxLogo from "./ThynxLogo";
 import StepIndicator from "./StepIndicator";
 import ChatWidget from "./ChatWidget";
 import { useStore } from "@/lib/store";
+import { useAIStatus } from "@/lib/useAIStatus";
 
 interface Props {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ interface Props {
 
 export default function Layout({ children, wide }: Props) {
   const { state } = useStore();
+  const aiStatus = useAIStatus();
 
   return (
     <div className="page-container">
@@ -21,7 +23,11 @@ export default function Layout({ children, wide }: Props) {
           <ThynxLogo size="sm" />
         </Link>
         <span className="navbar__powered">
-          ⚡ Jetson Offline · AI Powered
+          {aiStatus === "warming_up" || aiStatus === "checking"
+            ? "⏳ AI Warming Up…"
+            : aiStatus === "down"
+            ? "⚠️ AI Unreachable"
+            : "⚡ Running Fully Offline · AI Powered"}
         </span>
       </nav>
 
@@ -32,7 +38,7 @@ export default function Layout({ children, wide }: Props) {
       </main>
 
       <footer className="footer">
-        © {new Date().getFullYear()} ThynxAI — Beyond Intelligence &nbsp;·&nbsp; Powered by Qwen 2.5 on NVIDIA Jetson
+        © {new Date().getFullYear()} ThynxAI — Beyond Intelligence &nbsp;·&nbsp; Powered by ThynxAI's private on-device AI engine
       </footer>
 
       {/* Floating AI chatbot — available on every page */}

@@ -10,19 +10,37 @@ import { getReadinessTips, ReadinessTips } from "@/lib/api";
 
 export default function InvestmentHelp() {
   const router = useRouter();
-  const { state } = useStore();
-  const [tips, setTips] = useState<ReadinessTips | null>(null);
+  const { state, dispatch } = useStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const tips: ReadinessTips | null = state.investmentTips;
+
   useEffect(() => {
     if (!state.analysis) { router.replace("/results"); return; }
+    // Already cached — skip the LLM call
+    if (state.investmentTips) return;
+
     setLoading(true);
     getReadinessTips(state.analysis, "investment", state.searchContext || undefined)
-      .then(setTips)
+      .then((result) => {
+        dispatch({ type: "SET_INVESTMENT_TIPS", payload: result });
+      })
       .catch(() => setError("Could not generate investment tips. Please try again."))
       .finally(() => setLoading(false));
   }, []);
+
+  const handleRegenerate = () => {
+    if (!state.analysis) return;
+    setLoading(true);
+    setError("");
+    getReadinessTips(state.analysis, "investment", state.searchContext || undefined)
+      .then((result) => {
+        dispatch({ type: "SET_INVESTMENT_TIPS", payload: result });
+      })
+      .catch(() => setError("Could not regenerate investment tips. Please try again."))
+      .finally(() => setLoading(false));
+  };
 
   return (
     <>
@@ -30,9 +48,21 @@ export default function InvestmentHelp() {
       <AnimatePresence>{loading && <LoadingOverlay message="Generating your investment roadmap…" />}</AnimatePresence>
 
       <Layout>
-        <button className="btn btn--ghost" onClick={() => router.back()} style={{ marginBottom: "1.5rem" }}>
-          ← Back to Report
-        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
+          <button className="btn btn--ghost" onClick={() => router.back()}>
+            ← Back to Report
+          </button>
+          {tips && (
+            <button
+              className="btn btn--ghost"
+              onClick={handleRegenerate}
+              disabled={loading}
+              style={{ fontSize: "0.8rem", opacity: 0.7 }}
+            >
+              ↻ Regenerate
+            </button>
+          )}
+        </div>
 
         <div className="page-header">
           <div className="page-header__tag">💰 Investment Readiness</div>

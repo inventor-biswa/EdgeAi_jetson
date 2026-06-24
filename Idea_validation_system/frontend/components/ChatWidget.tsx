@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { sendChat, ChatMessage } from "@/lib/api";
+import { useAIStatus } from "@/lib/useAIStatus";
 
 const SendIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -28,6 +29,8 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const aiStatus = useAIStatus();
+  const aiReady = aiStatus === "ready";
 
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -36,6 +39,15 @@ export default function ChatWidget() {
   const send = async () => {
     const text = input.trim();
     if (!text || loading) return;
+    if (!aiReady) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "user", content: text },
+        { role: "assistant", content: "⏳ The AI model is still warming up after a restart — this usually takes under 2 minutes. Please try again shortly." },
+      ]);
+      setInput("");
+      return;
+    }
     const userMsg: ChatMessage = { role: "user", content: text };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
@@ -128,8 +140,12 @@ export default function ChatWidget() {
                   ThynxAI
                 </div>
                 <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.6)", display: "flex", alignItems: "center", gap: "4px" }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block", boxShadow: "0 0 8px #10b981" }} />
-                  Offline · Powered by Qwen
+                  <span style={{
+                    width: 6, height: 6, borderRadius: "50%", display: "inline-block",
+                    background: aiReady ? "#10b981" : "#f59e0b",
+                    boxShadow: aiReady ? "0 0 8px #10b981" : "0 0 8px #f59e0b",
+                  }} />
+                  {aiReady ? "Offline · AI Powered" : "Warming up…"}
                 </div>
               </div>
             </div>
@@ -199,7 +215,7 @@ export default function ChatWidget() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && send()}
-                  placeholder="Ask anything…"
+                  placeholder={aiReady ? "Ask anything…" : "AI is warming up…"}
                   style={{
                     flex: 1, background: "transparent", border: "none",
                     padding: "0.5rem 0.8rem", color: "#fff", fontSize: "0.95rem",

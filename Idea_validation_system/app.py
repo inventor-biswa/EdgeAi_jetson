@@ -48,8 +48,7 @@ with st.sidebar:
     st.write("3. Answer follow-up questions")
     st.write("4. Get full analysis report")
     st.divider()
-    st.write("🤖 Powered by Qwen2.5-7B-Instruct")
-    st.write("⚡ Running offline on NVIDIA Jetson")
+    st.write("⚡ Running fully offline · AI Powered")
 
 
 # ─── Session State ────────────────────────────────────────────────────────────

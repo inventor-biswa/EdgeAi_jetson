@@ -304,6 +304,67 @@ export default function Results() {
               })()}
             </AnalysisSection>
 
+            <AnalysisSection icon="⚠️" title="How This Can Fail — Know Before You Build">
+              {(() => {
+                const f = (analysis as any).failure_analysis || {};
+                const risks: string[] = f.top_3_kill_risks || [];
+                return (
+                  <>
+                    {f.why_similar_ideas_failed && (
+                      <div style={{ marginBottom: "1rem" }}>
+                        <div className="info-row__label" style={{ marginBottom: "0.4rem" }}>Why Similar Ideas Have Failed</div>
+                        <div style={{
+                          padding: "0.9rem 1.1rem",
+                          background: "rgba(239,68,68,0.08)",
+                          border: "1px solid rgba(239,68,68,0.25)",
+                          borderRadius: "10px",
+                          fontSize: "0.9rem",
+                          lineHeight: 1.65,
+                          color: "var(--text-primary)",
+                        }}>
+                          {f.why_similar_ideas_failed}
+                        </div>
+                      </div>
+                    )}
+                    {risks.length > 0 && (
+                      <div style={{ marginBottom: "1rem" }}>
+                        <div className="info-row__label" style={{ marginBottom: "0.6rem" }}>Top 3 Things That Could Kill This Idea</div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                          {risks.map((risk: string, i: number) => (
+                            <div key={i} style={{
+                              display: "flex", gap: "0.75rem", alignItems: "flex-start",
+                              padding: "0.75rem 1rem",
+                              background: "rgba(239,68,68,0.06)",
+                              border: "1px solid rgba(239,68,68,0.2)",
+                              borderRadius: "10px",
+                              fontSize: "0.9rem", lineHeight: 1.6, color: "var(--text-primary)",
+                            }}>
+                              <span style={{ fontWeight: 700, color: "#ef4444", flexShrink: 0, marginTop: "0.05rem" }}>#{i + 1}</span>
+                              <span>{risk}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {f.hardest_obstacle_first_90_days && (
+                      <div>
+                        <div className="info-row__label" style={{ marginBottom: "0.4rem" }}>Hardest Obstacle in the First 90 Days</div>
+                        <div style={{
+                          padding: "0.9rem 1.1rem",
+                          background: "rgba(245,158,11,0.08)",
+                          border: "1px solid rgba(245,158,11,0.25)",
+                          borderRadius: "10px",
+                          fontSize: "0.9rem", lineHeight: 1.65, color: "var(--text-primary)",
+                        }}>
+                          ⏱️ {f.hardest_obstacle_first_90_days}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
+            </AnalysisSection>
+
             <AnalysisSection icon="🤝" title="Support Required">
               {(() => {
                 const s = analysis.support_required || {};

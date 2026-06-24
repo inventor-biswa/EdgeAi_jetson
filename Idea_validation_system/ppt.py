@@ -1,5 +1,5 @@
 """
-ppt.py — Pitch Deck Generator for ThynxAI (Jetson Offline Edition)
+ppt.py — Pitch Deck Generator for ThynxAI (Offline Edition)
 
 Generates a professional pitch deck from the analysis dict using python-pptx.
 No template file required — builds slides programmatically with a clean dark theme.

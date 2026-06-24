@@ -1,5 +1,5 @@
 """
-database.py — Local SQLite storage for Jetson offline deployment.
+database.py — Local SQLite storage for offline deployment.
 
 Replaces MongoDB Atlas with SQLite (Python built-in, zero install).
 All analyses are stored in a local file: jetson_analyses.db
@@ -17,7 +17,7 @@ import sqlite3
 from datetime import datetime
 
 # ─── DB path ─────────────────────────────────────────────────────────────────
-# Stored next to the app files on the Jetson. Override via env var if needed.
+# Stored next to the app files on the device. Override via env var if needed.
 DB_PATH = os.environ.get("SQLITE_DB_PATH", "./jetson_analyses.db")
 
 

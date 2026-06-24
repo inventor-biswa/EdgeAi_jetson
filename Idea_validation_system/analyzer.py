@@ -1,8 +1,8 @@
 """
-analyzer.py — Core LLM logic (Jetson Offline Edition).
+analyzer.py — Core LLM logic (Offline Edition).
 
 Replaces Google Gemini API with the Nemotron-3-Nano-4B model
-running locally on Jetson Orin Nano via llama-server (llama.cpp).
+running locally via llama-server (llama.cpp).
 
 API endpoint: http://127.0.0.1:8080/v1/chat/completions
 This is OpenAI-compatible — same pattern as jetragv1/query.py.
@@ -86,7 +86,7 @@ def call_gemini(prompt: str, max_output_tokens: int = 2048) -> str:
         raise Exception(
             "❌ Cannot reach LLM server at "
             f"{LLM_API_URL}\n"
-            "Make sure start_llm.sh has been run on the Jetson!"
+            "Make sure the local LLM server has been started (start_llm.sh)."
         )
     except requests.exceptions.Timeout:
         raise Exception(
@@ -299,14 +299,48 @@ _ANALYSIS_SCHEMA = {
         "backend": "N/A", "frontend": "N/A", "database": "N/A",
         "cloud": "N/A", "ai_tools": "N/A",
     },
+    "failure_analysis": {
+        "why_similar_ideas_failed": "N/A — analysis incomplete",
+        "top_3_kill_risks": [
+            "Kill risk analysis incomplete — please retry",
+            "Kill risk analysis incomplete — please retry",
+            "Kill risk analysis incomplete — please retry",
+        ],
+        "hardest_obstacle_first_90_days": "N/A — analysis incomplete",
+    },
     "overall": {
         "score": "5",
+        "mvp_evidence": "NONE",
         "is_mvp_ready": "No — analysis could not complete fully",
         "is_investment_ready": "No — analysis could not complete fully",
         "is_incubator_ready": "No — analysis could not complete fully",
         "final_verdict": "The analysis ran in offline mode. Please retry for a full result.",
     },
 }
+
+
+def _verify_mvp_claim(result: dict) -> dict:
+    """
+    Safety net for the founder-facing MVP verdict.
+    The LLM is asked to be strict (see get_analysis_prompt) and to extract
+    "mvp_evidence" — a quote proving something is already built, or the
+    literal string "NONE". NOTE: proposed_solution always describes the
+    founder's PLAN (what they intend to build), so it is never empty and
+    must NOT be used as evidence of an existing product — only mvp_evidence,
+    extracted from the founder's own words, can prove that.
+    A 4B model can still hallucinate an optimistic "Yes" despite the
+    instructions, so this forces "No" whenever mvp_evidence is missing,
+    blank, or the literal "NONE" — regardless of what the LLM claimed.
+    """
+    overall = result.setdefault("overall", {})
+    evidence = str(overall.get("mvp_evidence", "")).strip()
+
+    if not evidence or evidence.upper() in ("NONE", "N/A"):
+        overall["is_mvp_ready"] = (
+            "No — no working prototype or user testing was described, "
+            "only a plan for what will be built later."
+        )
+    return result
 
 
 # ─── Public API Functions ─────────────────────────────────────────────────────
@@ -410,7 +444,10 @@ def analyze_idea(
         idea, founder_name, founder_data, followup_qa, search_context
     )
 
-    # 4096 tokens — balances completeness vs context window limit on 8GB Jetson
+    # 4096 tokens — kept at the original budget. A live test bumping this to
+    # 5500 caused the 8GB Jetson to swap-thrash into total unresponsiveness
+    # under back-to-back calls; the richer prompt wording already produces
+    # fuller output without needing more headroom.
     for attempt in range(3):
         try:
             raw = call_gemini(prompt, max_output_tokens=4096)
@@ -420,7 +457,7 @@ def analyze_idea(
                 schema=_ANALYSIS_SCHEMA,
             )
             if result:
-                return result
+                return _verify_mvp_claim(result)
         except Exception as e:
             print(f"⚠️  analyze_idea attempt {attempt+1} failed: {e}")
             time.sleep(2)

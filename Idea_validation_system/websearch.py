@@ -1,5 +1,5 @@
 """
-websearch.py — Offline mode for Jetson deployment.
+websearch.py — Offline mode for local deployment.
 
 Original: Tavily real-time web search API
 Replacement: Structured offline fallback that guides the local LLM
@@ -61,7 +61,7 @@ def _build_offline_context(idea: str, location: str = "India") -> dict:
     idea_snippet = idea[:200].strip()
 
     competitors_prompt = (
-        f"OFFLINE MODE (No live internet search available on Jetson). "
+        f"OFFLINE MODE (No live internet search available). "
         f"Based on your training knowledge up to {_OFFLINE_YEAR}, identify "
         f"the top 3-5 real startup competitors and established players in {location} "
         f"that are most relevant to this idea: '{idea_snippet}'. "
@@ -70,7 +70,7 @@ def _build_offline_context(idea: str, location: str = "India") -> dict:
     )
 
     market_size_prompt = (
-        f"OFFLINE MODE (No live internet search available on Jetson). "
+        f"OFFLINE MODE (No live internet search available). "
         f"Based on your training knowledge up to {_OFFLINE_YEAR}, estimate "
         f"the Total Addressable Market (TAM) size and CAGR growth rate in {location} "
         f"for the industry most relevant to: '{idea_snippet}'. "
@@ -79,7 +79,7 @@ def _build_offline_context(idea: str, location: str = "India") -> dict:
     )
 
     news_prompt = (
-        f"OFFLINE MODE (No live internet search available on Jetson). "
+        f"OFFLINE MODE (No live internet search available). "
         f"Based on your training knowledge up to {_OFFLINE_YEAR}, describe "
         f"the most relevant industry trends, recent funding rounds, and regulatory "
         f"developments in {location} for the sector related to: '{idea_snippet}'. "

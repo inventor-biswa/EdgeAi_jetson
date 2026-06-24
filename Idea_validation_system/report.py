@@ -45,11 +45,12 @@ def generate_markdown(analysis: dict) -> str:
 
     scores = analysis.get("scores", {})
     overall = analysis.get("overall", {})
-    profile = analysis.get("founder_profile", {}) 
+    profile = analysis.get("founder_profile", {})
     problem = analysis.get("problem_statement", {})
     solution = analysis.get("proposed_solution", {})
     innovation = analysis.get("core_innovation", {})
     market = analysis.get("market_landscape", {})
+    failure = analysis.get("failure_analysis", {})
     support = analysis.get("support_required", {})
     tech = analysis.get("tech_stack", {})
 
@@ -123,7 +124,7 @@ Idea: {analysis.get("idea_summary", "N/A")}
 ---
 
 ## 🔍 Market Intelligence (Offline Mode)
-> This data is based on the AI model's training knowledge. Running offline on NVIDIA Jetson — no live internet search.
+> This data is based on the AI model's training knowledge. Running fully offline — no live internet search.
 
 **Competitors Found Online:**
 {(analysis.get("search_context") or {}).get("competitors", "No data found")}
@@ -145,6 +146,19 @@ Idea: {analysis.get("idea_summary", "N/A")}
 | Revenue Potential | {scores.get("revenue_potential", {}).get("score", "N/A")}/10 | {safe(scores.get("revenue_potential", {}).get("reasoning", "N/A"))} |
 | Technical Complexity | {scores.get("technical_complexity", {}).get("score", "N/A")}/10 | {safe(scores.get("technical_complexity", {}).get("reasoning", "N/A"))} |
 | Execution Risk | {scores.get("execution_risk", {}).get("score", "N/A")}/10 | {safe(scores.get("execution_risk", {}).get("reasoning", "N/A"))} |
+
+---
+
+## ⚠️ How This Can Fail — Know Before You Build
+
+### Why Similar Ideas Have Failed
+{failure.get("why_similar_ideas_failed", "N/A")}
+
+### Top 3 Things That Could Kill This Idea
+{chr(10).join([f"{i+1}. {risk}" for i, risk in enumerate(failure.get("top_3_kill_risks", []))])}
+
+### Hardest Obstacle in the First 90 Days
+{failure.get("hardest_obstacle_first_90_days", "N/A")}
 
 ---
 

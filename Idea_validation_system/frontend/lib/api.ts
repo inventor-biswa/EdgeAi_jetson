@@ -10,6 +10,12 @@ const BASE = typeof window !== 'undefined'
 
 const client = axios.create({ baseURL: BASE, timeout: 360000 });
 
+// ── Health ────────────────────────────────────────────────────────────────────
+export interface HealthResult { status: string; llm: "ready" | "warming_up"; }
+
+export const getHealth = () =>
+  client.get<HealthResult>("/health", { timeout: 5000 }).then((r) => r.data);
+
 export interface ValidateResult {
   status: "VALID" | "INVALID";
   reason?: string;
