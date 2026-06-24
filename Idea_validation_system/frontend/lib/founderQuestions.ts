@@ -494,12 +494,45 @@ export const ALL_QUESTIONS: Question[] = [
   },
 ];
 
-// Skills map by background
+// Skills map by background + sub_field
 export const SKILLS_MAP: Record<string, string[]> = {
   Technical: [
     "Python / Programming","Web Development","Mobile App Dev",
     "Machine Learning / AI","Cloud / DevOps","Database / SQL",
     "Cybersecurity","UI / UX Design","System Design","GitHub / Open Source",
+  ],
+  "Hardware / Electronics / IoT": [
+    "Circuit Design / PCB","Embedded Systems (Arduino / ESP32)","Sensor Integration",
+    "3D Printing / CAD","Robotics / Servo Control","Firmware / RTOS",
+    "IoT Protocols (MQTT / BLE / WiFi)","Hardware Prototyping",
+    "Electronics Repair / Debugging","Lab Testing / Measurement",
+  ],
+  "Embedded Systems / Robotics": [
+    "Embedded C / C++","RTOS (FreeRTOS / Zephyr)","Robotics (ROS / ROS2)",
+    "Motor / Servo Control","Sensor Fusion","PCB Design",
+    "Real-time Control Systems","CAN / I2C / SPI / UART",
+    "Computer Vision (Edge)","Hardware Debugging",
+  ],
+  "Cybersecurity / Networking": [
+    "Network Security","Penetration Testing","Linux / Shell Scripting",
+    "Firewall / VPN Setup","Cryptography","Incident Response",
+    "SIEM Tools","Cloud Security","Web App Security","Ethical Hacking",
+  ],
+  "Cloud / DevOps / Infrastructure": [
+    "AWS / GCP / Azure","Docker / Kubernetes","CI / CD Pipelines",
+    "Infrastructure as Code (Terraform)","Linux Server Admin",
+    "Monitoring / Logging (Grafana)","Bash / Python Scripting",
+    "Database Admin","Networking (DNS / Load Balancing)","Site Reliability",
+  ],
+  "Data Science / AI / ML": [
+    "Python (NumPy / Pandas)","Machine Learning (sklearn / PyTorch)","Deep Learning",
+    "Data Visualization","SQL / Data Wrangling","NLP / LLMs",
+    "Computer Vision","MLOps / Model Deployment","Statistical Analysis","Big Data (Spark)",
+  ],
+  "Blockchain / Web3": [
+    "Solidity / Smart Contracts","Web3.js / Ethers.js","DeFi Protocols",
+    "NFT Development","Wallet Integration","IPFS / Decentralized Storage",
+    "Tokenomics Design","Audit / Security","Layer 2 Solutions","DAO Governance",
   ],
   "Non-Technical": [
     "Communication / Speaking","Teaching / Training","Writing / Storytelling",
@@ -545,9 +578,24 @@ export const SKILLS_MAP: Record<string, string[]> = {
   ],
 };
 
-export function getSkillsForBackground(bg: string): string[] {
+export function getSkillsForBackground(bg: string, subField?: string): string[] {
   if (bg.includes("Non-Technical")) return SKILLS_MAP["Non-Technical"];
-  if (bg.includes("Technical")) return SKILLS_MAP["Technical"];
+  if (bg.includes("Technical") && !bg.includes("Non-Technical")) {
+    // Use sub_field to pick the right technical skills list
+    if (subField?.includes("Hardware") || subField?.includes("IoT"))
+      return SKILLS_MAP["Hardware / Electronics / IoT"];
+    if (subField?.includes("Embedded") || subField?.includes("Robotics"))
+      return SKILLS_MAP["Embedded Systems / Robotics"];
+    if (subField?.includes("Cybersecurity") || subField?.includes("Networking"))
+      return SKILLS_MAP["Cybersecurity / Networking"];
+    if (subField?.includes("Cloud") || subField?.includes("DevOps"))
+      return SKILLS_MAP["Cloud / DevOps / Infrastructure"];
+    if (subField?.includes("Data") || subField?.includes("AI") || subField?.includes("ML"))
+      return SKILLS_MAP["Data Science / AI / ML"];
+    if (subField?.includes("Blockchain") || subField?.includes("Web3"))
+      return SKILLS_MAP["Blockchain / Web3"];
+    return SKILLS_MAP["Technical"]; // Software / Web / Mobile default
+  }
   if (bg.includes("Business")) return SKILLS_MAP["Business"];
   if (bg.includes("Research")) return SKILLS_MAP["Research"];
   if (bg.includes("Student")) return SKILLS_MAP["Student"];

@@ -23,6 +23,7 @@ export interface AppState {
   answersHistory: Array<{ question: string; answer: string }>;
   followupQA: Array<{ question: string; answer: string }>;
   analysis: AnalysisResult | null;
+  analysisId: number | null;
   searchContext: Record<string, any> | null;
   subPage: "mvp_help" | "investment_help" | null;
   mvpTips: ReadinessTips | null;
@@ -40,6 +41,7 @@ const INITIAL_STATE: AppState = {
   answersHistory: [],
   followupQA: [],
   analysis: null,
+  analysisId: null,
   searchContext: null,
   subPage: null,
   mvpTips: null,
@@ -105,7 +107,8 @@ function reducer(state: AppState, action: Action): AppState {
         { question: action.question, answer: action.answer },
       ];
       const nextIndex = state.currentQuestionIndex + 1;
-      if (nextIndex > 3) {
+      // 3 fixed + 3 AI-generated = 6 total questions before analysis
+      if (nextIndex > 5) {
         return {
           ...state,
           answersHistory: newAnswers,
@@ -120,7 +123,11 @@ function reducer(state: AppState, action: Action): AppState {
       };
     }
     case "SET_ANALYSIS":
-      return { ...state, analysis: action.payload };
+      return {
+        ...state,
+        analysis: action.payload,
+        analysisId: action.payload.id ?? null,
+      };
     case "SET_SUB_PAGE":
       return { ...state, subPage: action.payload };
     case "SET_MVP_TIPS":
@@ -128,8 +135,16 @@ function reducer(state: AppState, action: Action): AppState {
     case "SET_INVESTMENT_TIPS":
       return { ...state, investmentTips: action.payload };
     case "LOAD_SAVED_ANALYSIS":
-      // Load a historical analysis — clear cached tips since they belong to the previous session
-      return { ...INITIAL_STATE, step: 4, analysis: action.payload, idea: action.payload.original_idea || action.payload.idea_summary || "" };
+      // Load a historical analysis — restore any tips that were saved alongside it
+      return {
+        ...INITIAL_STATE,
+        step: 4,
+        analysis: action.payload,
+        analysisId: action.payload.id ?? null,
+        idea: action.payload.original_idea || action.payload.idea_summary || "",
+        mvpTips: action.payload.mvp_tips ?? null,
+        investmentTips: action.payload.investment_tips ?? null,
+      };
     case "RESET":
       return { ...INITIAL_STATE };
     case "START_NEW_IDEA":

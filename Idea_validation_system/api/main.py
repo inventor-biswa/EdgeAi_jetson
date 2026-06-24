@@ -30,7 +30,7 @@ from analyzer import (
     generate_pitch_slides,
 )
 from report import save_json, save_markdown
-from database import save_analysis
+from database import save_analysis, update_analysis_tips
 from websearch import get_search_context
 from ppt import generate_ppt
 from analyzer import LLM_API_URL
@@ -200,8 +200,10 @@ async def api_analyze(req: AnalyzeRequest):
         analysis["original_idea"] = req.idea
         analysis["search_context"] = req.search_context
 
-        # Save to SQLite
-        save_analysis(analysis)
+        # Save to SQLite and return the row ID so the frontend can PATCH tips later
+        row_id = save_analysis(analysis)
+        if row_id > 0:
+            analysis["id"] = row_id
 
         return analysis
 
@@ -328,6 +330,26 @@ async def api_get_analysis(analysis_id: int):
         result["id"] = row["id"]
         result["_saved_at"] = row["saved_at"]
         return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+class TipsUpdateRequest(BaseModel):
+    tip_type: str   # "mvp" or "investment"
+    tips: Dict[str, Any]
+
+@app.patch("/api/analyses/{analysis_id}")
+async def api_update_tips(analysis_id: int, req: TipsUpdateRequest):
+    """Saves generated readiness tips into an existing analysis row."""
+    if req.tip_type not in ("mvp", "investment"):
+        raise HTTPException(status_code=400, detail="tip_type must be 'mvp' or 'investment'.")
+    try:
+        ok = update_analysis_tips(analysis_id, req.tip_type, req.tips)
+        if not ok:
+            raise HTTPException(status_code=404, detail=f"Analysis {analysis_id} not found.")
+        return {"ok": True}
     except HTTPException:
         raise
     except Exception as e:

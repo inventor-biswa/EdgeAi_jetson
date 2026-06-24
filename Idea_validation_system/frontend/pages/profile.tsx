@@ -107,7 +107,10 @@ export default function Profile() {
     }
   }, [currentQ, state.chatHistory.length]);
 
-  const skillOptions = getSkillsForBackground(state.founderData.background || "");
+  const skillOptions = getSkillsForBackground(
+    state.founderData.background || "",
+    state.founderData.sub_field || ""
+  );
 
   const toggleSkill = (skill: string) => {
     setSelectedSkills((prev) =>

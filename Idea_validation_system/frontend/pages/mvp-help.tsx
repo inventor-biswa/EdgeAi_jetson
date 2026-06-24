@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Layout from "@/components/Layout";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import { useStore } from "@/lib/store";
-import { getReadinessTips, ReadinessTips } from "@/lib/api";
+import { getReadinessTips, updateAnalysisTips, ReadinessTips } from "@/lib/api";
 
 export default function MvpHelp() {
   const router = useRouter();
@@ -16,16 +16,21 @@ export default function MvpHelp() {
 
   const tips: ReadinessTips | null = state.mvpTips;
 
+  const saveTips = (result: ReadinessTips) => {
+    dispatch({ type: "SET_MVP_TIPS", payload: result });
+    if (state.analysisId && state.analysisId > 0) {
+      updateAnalysisTips(state.analysisId, "mvp", result).catch(() => {});
+    }
+  };
+
   useEffect(() => {
     if (!state.analysis) { router.replace("/results"); return; }
-    // Already cached — skip the LLM call
+    // If tips are cached in store (from localStorage or LOAD_SAVED_ANALYSIS), skip LLM call
     if (state.mvpTips) return;
 
     setLoading(true);
     getReadinessTips(state.analysis, "mvp", state.searchContext || undefined)
-      .then((result) => {
-        dispatch({ type: "SET_MVP_TIPS", payload: result });
-      })
+      .then(saveTips)
       .catch(() => setError("Could not generate MVP tips. Please try again."))
       .finally(() => setLoading(false));
   }, []);
@@ -35,9 +40,7 @@ export default function MvpHelp() {
     setLoading(true);
     setError("");
     getReadinessTips(state.analysis, "mvp", state.searchContext || undefined)
-      .then((result) => {
-        dispatch({ type: "SET_MVP_TIPS", payload: result });
-      })
+      .then(saveTips)
       .catch(() => setError("Could not regenerate MVP tips. Please try again."))
       .finally(() => setLoading(false));
   };

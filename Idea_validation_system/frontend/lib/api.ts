@@ -30,6 +30,7 @@ export interface SearchResult {
 }
 
 export interface AnalysisResult {
+  id?: number;
   founder_name: string;
   idea_summary: string;
   overall: {
@@ -38,6 +39,7 @@ export interface AnalysisResult {
     is_investment_ready: string;
     is_incubator_ready: string;
     final_verdict: string;
+    mvp_evidence?: string;
   };
   scores: Record<string, { score: string; reasoning: string }>;
   problem_statement: Record<string, any>;
@@ -46,10 +48,17 @@ export interface AnalysisResult {
   market_landscape: Record<string, string>;
   support_required: Record<string, string>;
   tech_stack: Record<string, string>;
+  failure_analysis?: {
+    why_similar_ideas_failed: string;
+    top_3_kill_risks: string[];
+    hardest_obstacle_first_90_days: string;
+  };
   founder_profile?: Record<string, any>;
   followup_qa?: Array<{ question: string; answer: string }>;
   original_idea?: string;
   search_context?: Record<string, any>;
+  mvp_tips?: ReadinessTips;
+  investment_tips?: ReadinessTips;
 }
 
 export interface ReadinessTips {
@@ -154,6 +163,15 @@ export const getAnalysis = (id: number) =>
 
 export const deleteAnalysis = (id: number) =>
   client.delete(`/api/analyses/${id}`).then((r) => r.data);
+
+export const updateAnalysisTips = (
+  id: number,
+  tip_type: "mvp" | "investment",
+  tips: ReadinessTips
+) =>
+  client
+    .patch<{ ok: boolean }>(`/api/analyses/${id}`, { tip_type, tips })
+    .then((r) => r.data);
 
 // ── Chatbot ───────────────────────────────────────────────────────────────────
 export interface ChatMessage { role: "user" | "assistant"; content: string; }

@@ -42,6 +42,7 @@ export default function Results() {
   const [dlLoading, setDlLoading] = useState<string | null>(null);
   const [pptReady, setPptReady] = useState(false);
   const [error, setError] = useState("");
+  const [showQA, setShowQA] = useState(false);
   const [followupMessages, setFollowupMessages] = useState<ChatMessage[]>([]);
   const [followupInput, setFollowupInput] = useState("");
   const [followupLoading, setFollowupLoading] = useState(false);
@@ -189,20 +190,74 @@ export default function Results() {
                 </div>
               </div>
 
-              {/* Readiness action buttons */}
+              {/* Readiness action buttons — label changes based on current status */}
               <div className="btn-group" style={{ marginTop: "1.25rem", borderTop: "1px solid var(--glass-border)", paddingTop: "1.25rem" }}>
-                {isNo(analysis.overall?.is_mvp_ready || "") && (
-                  <button className="btn btn--ghost" onClick={() => router.push("/mvp-help")}>
-                    🔧 How to become MVP Ready →
-                  </button>
-                )}
-                {isNo(analysis.overall?.is_investment_ready || "") && (
-                  <button className="btn btn--ghost" onClick={() => router.push("/investment-help")}>
-                    💰 How to become Investment Ready →
-                  </button>
-                )}
+                <button className="btn btn--ghost" onClick={() => router.push("/mvp-help")}>
+                  {isYes(analysis.overall?.is_mvp_ready || "")
+                    ? "🚀 Strengthen Your MVP Strategy →"
+                    : "🔧 How to Become MVP Ready →"}
+                </button>
+                <button className="btn btn--ghost" onClick={() => router.push("/investment-help")}>
+                  {isYes(analysis.overall?.is_investment_ready || "")
+                    ? "💡 Refine Your Investment Pitch →"
+                    : "💰 How to Become Investment Ready →"}
+                </button>
               </div>
             </motion.div>
+
+            {/* ── Q&A Verification — shown right after readiness ──────── */}
+            {analysis.followup_qa && analysis.followup_qa.length > 0 && (
+              <div className="card" style={{ marginBottom: "1.5rem", border: "1px solid rgba(99,102,241,0.3)" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: "0.95rem", marginBottom: "0.2rem" }}>
+                      🔍 Spot Hallucinations — See What the AI Actually Read
+                    </div>
+                    <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                      {analysis.followup_qa.length} answers the AI used to generate this report
+                    </div>
+                  </div>
+                  <button
+                    className="btn btn--ghost"
+                    style={{ flexShrink: 0, fontSize: "0.85rem" }}
+                    onClick={() => setShowQA((v) => !v)}
+                  >
+                    {showQA ? "▲ Hide Answers" : "▼ Show Answers"}
+                  </button>
+                </div>
+                <AnimatePresence>
+                  {showQA && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      style={{ overflow: "hidden" }}
+                    >
+                      <p style={{ marginTop: "1rem", marginBottom: "0.75rem", fontSize: "0.82rem", color: "var(--text-muted)" }}>
+                        If any answer below looks wrong or was misunderstood, click Start Over and re-enter it.
+                      </p>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                        {analysis.followup_qa.map((item, i) => (
+                          <div key={i} style={{
+                            padding: "0.85rem 1rem",
+                            background: "rgba(255,255,255,0.03)",
+                            border: "1px solid var(--glass-border)",
+                            borderRadius: "10px",
+                          }}>
+                            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--thynx-blue-light)", marginBottom: "0.35rem" }}>
+                              Q{i + 1}: {item.question}
+                            </div>
+                            <div style={{ fontSize: "0.9rem", color: "var(--text-primary)", lineHeight: 1.55 }}>
+                              {item.answer}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
 
             {/* ── Scores ─────────────────────────────────────────────── */}
             <h2 style={{ fontWeight: 700, marginBottom: "1rem" }}>📊 Dimension Scores</h2>

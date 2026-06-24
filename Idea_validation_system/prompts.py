@@ -22,7 +22,7 @@ def get_adaptive_question_prompt(idea: str, founder_name: str, founder_data: dic
     if search_context:
         market_hint = f"MARKET CONTEXT: {str(search_context.get('competitors',''))[:200]}"
 
-    return f"""You are a startup mentor interviewing a founder. Ask question {question_num} of 4.
+    return f"""You are a startup mentor interviewing a founder. Ask question {question_num} of 3.
 
 IDEA: {idea}
 FOUNDER: Name={founder_name}, Background={fd.get('background','?')}, Skills={fd.get('skills','?')}, Goal={fd.get('main_goal','?')}
@@ -35,39 +35,38 @@ LAST ANSWER FROM FOUNDER: {last_answer}
 
 Rules:
 - Ask about a completely DIFFERENT aspect than the questions above
-- Keep it SHORT (1 sentence)
+- Ask one clear, open-ended question that invites a detailed answer — do NOT tell the founder to keep it short
 - Make it specific to their idea, not generic
-- Cover different themes across the 4 questions: customers, revenue, competition, execution
-- Question {question_num} should focus on: {"customers and who will pay" if question_num == 1 else "revenue model and how they make money" if question_num == 2 else "their unique edge vs competitors" if question_num == 3 else "first step to launch in 30 days"}
+- Cover different themes across the 3 questions: customers, revenue, competition
+- Question {question_num} should focus on: {"customers — who specifically will pay and why they would choose this over what they do today" if question_num == 1 else "revenue model — how exactly will this make money and what the pricing looks like" if question_num == 2 else "competitive edge — what makes this genuinely different from existing alternatives"}
 
 Respond ONLY with this JSON:
 {{"question": "your single question here?"}}"""
 
 
 def get_bulk_questions_prompt(idea: str, founder_name: str, founder_data: dict, search_context: dict = None) -> str:
-    """Generates all 4 questions at once to guarantee no repetition."""
+    """Generates all 3 AI questions at once to guarantee no repetition."""
     fd = founder_data
     market_hint = ""
     if search_context:
         market_hint = f"MARKET: {str(search_context.get('competitors',''))[:300]}"
 
-    return f"""You are a startup mentor. Generate exactly 4 different interview questions for this founder.
+    return f"""You are a startup mentor. Generate exactly 3 different interview questions for this founder.
 
 IDEA: {idea}
 FOUNDER: Name={founder_name}, Background={fd.get('background','?')}, Skills={fd.get('skills','?')}, Goal={fd.get('main_goal','?')}
 {market_hint}
 
 Rules:
-- All 4 questions must be about DIFFERENT topics
-- Q1: about their target customers (who will pay and why)
-- Q2: about their revenue model (how they make money)
-- Q3: about their competitive edge (what makes them different)
-- Q4: about their first launch step (what they would build first in 30 days)
-- Keep each question SHORT (1 sentence), specific to this idea
-- No generic questions like "who is your customer"
+- All 3 questions must be about DIFFERENT topics
+- Q1: about their target customers (who specifically will pay and why they would choose this over existing alternatives)
+- Q2: about their revenue model (how exactly they make money and what the pricing looks like)
+- Q3: about their competitive edge (what makes this genuinely different from existing solutions)
+- Each question must be open-ended and invite a detailed, thoughtful answer — do NOT tell the founder to keep it short
+- Questions must be specific to this idea — no generic questions
 
 Respond ONLY with this JSON:
-{{"questions": ["question 1?", "question 2?", "question 3?", "question 4?"]}}"""
+{{"questions": ["question 1?", "question 2?", "question 3?"]}}"""
 
 
 def get_analysis_prompt(idea: str, founder_name: str, founder_data: dict, followup_qa: list, search_context: dict = None) -> str:

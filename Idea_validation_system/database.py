@@ -47,15 +47,15 @@ def _get_conn() -> sqlite3.Connection:
 
 # ─── Public API (identical signatures to original database.py) ───────────────
 
-def save_analysis(analysis: dict) -> bool:
+def save_analysis(analysis: dict) -> int:
     """
     Saves one analysis result to SQLite.
-    Returns True if saved successfully, False if failed.
+    Returns the new row ID on success, or -1 on failure.
     Also writes a timestamped JSON backup to outputs/ for easy retrieval.
     """
     try:
         conn = _get_conn()
-        conn.execute(
+        cursor = conn.execute(
             """
             INSERT INTO analyses (founder_name, idea_summary, data, saved_at)
             VALUES (?, ?, ?, ?)
@@ -67,17 +67,46 @@ def save_analysis(analysis: dict) -> bool:
                 datetime.now().isoformat(),
             ),
         )
+        row_id = cursor.lastrowid
         conn.commit()
         conn.close()
 
-        # Write a timestamped JSON backup alongside the main output
         _write_json_backup(analysis)
-
-        print(f"✅ Analysis saved to SQLite: {DB_PATH}")
-        return True
+        print(f"✅ Analysis saved to SQLite id={row_id}: {DB_PATH}")
+        return row_id
 
     except Exception as e:
         print(f"❌ SQLite save failed: {e}")
+        return -1
+
+
+def update_analysis_tips(analysis_id: int, tip_type: str, tips: dict) -> bool:
+    """
+    Saves generated readiness tips back into an existing analysis row.
+    tip_type must be 'mvp' or 'investment'.
+    Stores under keys 'mvp_tips' / 'investment_tips' inside the data JSON.
+    """
+    field = f"{tip_type}_tips"
+    try:
+        conn = _get_conn()
+        row = conn.execute(
+            "SELECT data FROM analyses WHERE id = ?", (analysis_id,)
+        ).fetchone()
+        if not row:
+            conn.close()
+            return False
+        data = json.loads(row["data"])
+        data[field] = tips
+        conn.execute(
+            "UPDATE analyses SET data = ? WHERE id = ?",
+            (json.dumps(data, ensure_ascii=False), analysis_id),
+        )
+        conn.commit()
+        conn.close()
+        print(f"✅ Tips ({field}) saved to analysis id={analysis_id}")
+        return True
+    except Exception as e:
+        print(f"❌ update_analysis_tips failed: {e}")
         return False
 
 
